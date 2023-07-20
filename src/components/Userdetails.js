@@ -5,7 +5,6 @@ function UserDetails(props) {
   const deleteuserHandler=(element)=>
   {
      props.deleteuser(element)
-
   }
   return (
     <div className="user-details">
