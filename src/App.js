@@ -1,73 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Userform from "./components/Userform";
 import UserDetails from "./components/Userdetails";
-import axios from "axios";
-
+import useFetch from "./components/useFetch";
+const apiUrl = process.env.REACT_APP_API_ENDPOINT;
+const apiDelete = process.env.REACT_APP_API_DELETE;
 function App() {
-  useEffect(() => {
-    axios
-      .get(
-        "https://react-http-tutorial-746a1-default-rtdb.firebaseio.com/users.json"
-      )
-      .then((response) => {
-        const users = [];
-        for (let key in response.data) {
-          users.push({ ...response.data[key], id: key });
-        }
-        setusers(users);
-      })
-      .catch(() => console.log("Error"));
-  }, []);
+  const [usrs, fetchData, postData, deleteData] = useFetch(apiUrl);
   let [showForm, setForm] = useState(false);
-  let [users, setusers] = useState([]);
   const addUserHandler = () => {
     setForm(true);
   };
   const closeForm = () => {
     setForm(false);
   };
-
   const createUser = (user) => {
-    axios
-      .post(
-        "https://react-http-tutorial-746a1-default-rtdb.firebaseio.com/users.json",
-        user
-      )
-      .then((response) => {
-        getUsersHandler();
-      })
-      .catch(() => console.log("Error"));
+    postData(apiUrl, user);
 
     setForm(false);
   };
-
   const getUsersHandler = () => {
-    axios
-      .get(
-        "https://react-http-tutorial-746a1-default-rtdb.firebaseio.com/users.json"
-      )
-      .then((response) => {
-        const users = [];
-        for (let key in response.data) {
-          users.push({ ...response.data[key], id: key });
-        }
-        setusers(users);
-      })
-      .catch(() => console.log("Error"));
+    fetchData();
   };
-
   const deleteUser = (user) => {
-    axios
-      .delete(
-        "https://react-http-tutorial-746a1-default-rtdb.firebaseio.com/users/" +
-          user.id +
-          ".json"
-      )
-      .then((response) => {
-        getUsersHandler();
-      })
-      .catch(() => console.log("Error"));
+    deleteData(apiDelete, user);
   };
   return (
     <>
@@ -80,7 +36,7 @@ function App() {
           Get Users
         </button>
       </div>
-      <UserDetails userinfo={users} deleteuser={deleteUser}></UserDetails>
+      <UserDetails userinfo={usrs} deleteuser={deleteUser}></UserDetails>
       <div>
         {" "}
         {showForm && (
@@ -90,5 +46,4 @@ function App() {
     </>
   );
 }
-
 export default App;
