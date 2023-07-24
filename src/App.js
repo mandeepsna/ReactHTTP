@@ -3,10 +3,9 @@ import "./App.css";
 import Userform from "./components/Userform";
 import UserDetails from "./components/Userdetails";
 import useFetch from "./components/useFetch";
-const apiUrl = process.env.REACT_APP_API_ENDPOINT;
-const apiDelete = process.env.REACT_APP_API_DELETE;
+
 function App() {
-  const [usrs, fetchData, postData, deleteData] = useFetch(apiUrl);
+  const [usrs, fetchData, postData, deleteData] = useFetch();
   let [showForm, setForm] = useState(false);
   const addUserHandler = () => {
     setForm(true);
@@ -15,15 +14,11 @@ function App() {
     setForm(false);
   };
   const createUser = (user) => {
-    postData(apiUrl, user);
-
+    postData(user);
     setForm(false);
   };
   const getUsersHandler = () => {
     fetchData();
-  };
-  const deleteUser = (user) => {
-    deleteData(apiDelete, user);
   };
   return (
     <>
@@ -36,7 +31,7 @@ function App() {
           Get Users
         </button>
       </div>
-      <UserDetails userinfo={usrs} deleteuser={deleteUser}></UserDetails>
+      <UserDetails userinfo={usrs} deleteuser={deleteData}></UserDetails>
       <div>
         {" "}
         {showForm && (
